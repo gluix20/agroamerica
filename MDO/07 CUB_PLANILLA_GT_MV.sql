@@ -3,7 +3,8 @@ exec ETL_SCRIPTS.refresh_now('MDO','AGRODW','CUB_PLANILLA_GT_MV','MV');
 --alter materialized view AGRODW.CUB_PLANILLA_GT_MV compile;
 --purge recyclebin;
 
-select * from AGRODW.CUB_PLANILLA_GT_MV
+select min(fecha_finca)
+from AGRODW.CUB_PLANILLA_GT_MV
 --order by 1,2
 ;
 
@@ -40,9 +41,7 @@ left outer join   agrodw.dim_persona_tab p
     and stg.codigo = p.codigo)
     
 left outer join periodos_carga fc on (1=1)
-
 where stg.fecha >= fc.fecha
---and stg.historico = 0
 and stg.tipo_reg= 'COSTO'
 ;
 

@@ -14,11 +14,13 @@ order by 1 desc
 select 'FRO_OBI_PLANILLA' tipo, min(fecha) fecha, min(fecha_jde) fecha_jde from periodos
 where rownum <= 4
 union all
-select 'PLANILLA' tipo, to_date('01/01/2018','dd/mm/yyyy') fecha, 118001 fecha_jde from dual
-union all
-select 'HISTORICO' tipo, to_date('01/01/2017','dd/mm/yyyy') fecha, 117001 fecha_jde from dual
-union all
 select 'STG_PLANILLA_GT' tipo, to_date('01/01/2017','dd/mm/yyyy') fecha, 117001 fecha_jde from dual
+union all
+select 'STG_PLANILLA_EC' tipo, to_date('01/01/2017','dd/mm/yyyy') fecha, 117001 fecha_jde from dual
+union all
+select 'STG_MANO_OBRA' tipo, to_date('01/01/2017','dd/mm/yyyy') fecha, 117001 fecha_jde from dual
+union all
+select 'CUB_PLANILLA_GT_MV' tipo, to_date('01/01/2018','dd/mm/yyyy') fecha, 118001 fecha_jde from dual
 ;
 
 

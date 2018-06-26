@@ -5,17 +5,23 @@ exec ETL_SCRIPTS.refresh_now('MDO','AGROSTG','STG_MANO_OBRA','MV');
 --purge recyclebin;
 
 
-select * 
-from stg_mano_obra c
+select * from stg_mano_obra c
 ;
 
 CREATE MATERIALIZED VIEW AGROSTG.STG_MANO_OBRA
 NOCOMPRESS NOLOGGING TABLESPACE "STAGE" BUILD DEFERRED REFRESH COMPLETE ON DEMAND using trusted constraints
 AS
-with planilla_gt as (
+with fecha_carga as (
+select fecha from agrostg.stg_periodos_carga_vw
+where tipo = 'STG_MANO_OBRA'
+)
+, planilla_gt as (
 select 
-nomec, clave, aplic, fecha_finca, fecha, instancia, negocio, tc tasa_cambio,
-actividad_cod, cc, tipo_oper, historico,
+nomec, clave, aplic, fecha_finca, fecha, instancia, negocio
+, tc tasa_cambio
+, actividad_cod
+, cc
+, tipo_oper,
 sum(jornales) jornales, sum(cantidad) cantidad, sum(hrs) hrs, sum(registros) registros, sum(frecuencia) frecuencia, 
 sum(valor) valor, sum(bonoh) bonoh, sum(bonom) bonom, sum(ajuste) ajuste, 
 sum(prestacion) prestacion, sum(vacaciones) vacaciones, sum(cuota_patronal) cuota_patronal
@@ -24,11 +30,12 @@ where p.valor_gtq+p.bonoh_gtq+p.bonom_gtq+p.ajuste_gtq != 0
 and p.tipo_reg = 'COSTO'
 group by 
 nomec, clave, aplic, fecha_finca, fecha, instancia, negocio, tc,
-actividad_cod, cc, tipo_oper, historico
+actividad_cod, cc, tipo_oper
 )
-SELECT
+
+select
 cast(a.negocio as varchar2(10)) negocio,
-'PLA' tipo_costo, a.tipo_oper, a.historico,
+'PLA' tipo_costo, a.tipo_oper,
 'PLANILLA' descripcion,
 
 nvl(valor + bonoh + bonom + ajuste + prestacion*3 + vacaciones + cuota_patronal, 0) mdo,
@@ -56,7 +63,7 @@ a.cc, a.instancia, a.actividad_cod,
   UNION ALL
   
   SELECT /*+ use_nl(a) NO_MERGE(a) PUSH_PRED(a) */
-  a.negocio, tipo_costo, a.tipo_oper, 0 historico,
+  a.negocio, tipo_costo, a.tipo_oper,
   a.descripcion, 
   valor mdo,
   0 ordin,0 extra, 0 septi,0 feria,0 asmin,
@@ -69,14 +76,15 @@ a.cc, a.instancia, a.actividad_cod,
   fecha, fecha fecha_finca,
     cc, 0 instancia, actividad_cod,
     a.cuenta
-  from stg_costos_og a where tipo_costo='CDP'
+  from stg_costos_og a 
+  where tipo_costo='CDP'
+  and fecha >= (select fecha from fecha_carga)
   
   UNION ALL
   
   select
 to_char('BANANO') negocio, 'PLA' tipo_costo,
 case when l.inversion = 1 and ac.costo_locinv = 1 then 'INVERSION' else 'COSTO' end tipo_oper,
-a.historico,
 to_char('PLANILLA') descripcion,
 monto_usd mdo,
 ordinario_usd ordin,extraordinario_usd extra,0 septi,0 feria,0 asmin,

@@ -8,7 +8,7 @@ exec ETL_SCRIPTS.refresh_now('MDO','AGROSTG','STG_MDO_PRR','MV');
 
 select * from agrostg.stg_mdo_prr c 
 left outer join stg_locacion l on (c.cc=l.cc and c.fecha between l.fecha_ini and l.fecha_fin)
-where l.distrito = 'COSTOS FIJOS'
+--where l.distrito = 'COSTOS FIJOS'
 ;
 
 CREATE MATERIALIZED VIEW AGROSTG.STG_MDO_PRR
@@ -21,7 +21,7 @@ c.negocio, c.descripcion,
 c.tasa_cambio, c.clave, c.aplic, c.nomec, 
 c.labor_join, c.fecha, c.fecha_finca,
 c.cc, c.instancia, c.actividad_cod, 
-c.cuenta, c.tipo_oper, c.historico,
+c.cuenta, c.tipo_oper,
 c.mdo, c.ordin, c.extra, c.septi, c.feria, c.asmin, 
 c.valor, c.bonom, c.bonod, c.exced, c.prest, c.patro, 
 c.fuerza_jornal, 
@@ -45,7 +45,7 @@ a.negocio, a.descripcion,
 a.tasa_cambio, a.clave, a.aplic, a.nomec,
 a.labor_join, a.fecha, a.fecha_finca,
 b.cc, a.instancia, a.actividad_cod,
-a.cuenta, a.tipo_oper, a.historico,
+a.cuenta, a.tipo_oper,
 round(a.mdo*b.factor,2), round(a.ordin*b.factor,2), round(a.extra*b.factor,2), round(a.septi*b.factor,2), 
 round(a.feria*b.factor,2), round(a.asmin*b.factor,2), round(a.valor*b.factor,2), round(a.bonom*b.factor,2), 
 round(a.bonod*b.factor,2), round(a.exced*b.factor,2), round(a.prest*b.factor,2), round(a.patro*b.factor,2), 

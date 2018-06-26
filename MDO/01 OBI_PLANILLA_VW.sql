@@ -3,7 +3,7 @@ select * from trabajos;
 
 CREATE OR REPLACE FORCE VIEW OBI_PLANILLA_VW
 AS
-with desde_ano as (
+with fecha_carga as (
 select 2015 ano from dual
 ),
 
@@ -13,25 +13,25 @@ select /*+ USE_NL(t) NO_MERGE(t) PUSH_PRED(t) */
 1 instancia, t.cia, t.planilla, t.locno, t.nomec, t.clave, t.aplic, trunc(t.fecha) fecha, 
 t.codigo, t.ano, t.valor, t.ajuste, t.bonom, t.bonoh, t.hrs, t.cantidad 
 from trabajos t
-where t.ano >= (select ano from desde_ano)
+where t.ano >= (select ano from fecha_carga)
 union all
 select /*+ USE_NL(t) NO_MERGE(t) PUSH_PRED(t) */
 2 instancia, t.cia, t.planilla, t.locno, t.nomec, t.clave, t.aplic, trunc(t.fecha) fecha, 
 t.codigo, t.ano, t.valor, t.ajuste, t.bonom, t.bonoh, t.hrs, t.cantidad 
 from trabajos@sierra t
-where t.ano >= (select ano from desde_ano)
+where t.ano >= (select ano from fecha_carga)
 union all
 select /*+ USE_NL(t) NO_MERGE(t) PUSH_PRED(t) */
 3 instancia, t.cia, t.planilla, t.locno, t.nomec, t.clave, t.aplic, trunc(t.fecha) fecha, 
 t.codigo, t.ano, t.valor, t.ajuste, t.bonom, t.bonoh, t.hrs, t.cantidad 
 from trabajos@vegas t
-where t.ano >= (select ano from desde_ano)
+where t.ano >= (select ano from fecha_carga)
 union all
 select /*+ USE_NL(t) NO_MERGE(t) PUSH_PRED(t) */
 4 instancia, t.cia, t.planilla, t.locno, t.nomec, t.clave, t.aplic, trunc(t.fecha) fecha, 
 t.codigo, t.ano, t.valor, t.ajuste, t.bonom, t.bonoh, t.hrs, t.cantidad 
 from trabajos@pana t
-where t.ano >= (select ano from desde_ano)
+where t.ano >= (select ano from fecha_carga)
 )
 
 select t.instancia,
