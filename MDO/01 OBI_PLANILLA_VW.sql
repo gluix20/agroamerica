@@ -37,7 +37,6 @@ where t.ano >= (select ano from desde_ano)
 select t.instancia,
 t.cia, t.planilla, t.locno,
 t.nomec, t.clave, t.aplic,
-0 historico,--SI ES CERO ES REGISTRO ACTUAL
 case when t.aplic < 10 then 'COSTO' else 'DESCUENTO' end tipo_reg,
 t.fecha fecha_finca,
 t.codigo,
