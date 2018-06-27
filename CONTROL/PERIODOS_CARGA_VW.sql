@@ -21,9 +21,11 @@ union all
 select 'STG_MANO_OBRA' tipo, to_date('01/01/2017','dd/mm/yyyy') fecha, 117001 fecha_jde from dual
 union all
 select 'CUB_PLANILLA_GT_MV' tipo, to_date('01/01/2018','dd/mm/yyyy') fecha, 118001 fecha_jde from dual
+union all
+select 'STG_COSTOS_OG' tipo, to_date('03/01/2016','dd/mm/yyyy') fecha, 116003 fecha_jde from dual
 ;
 
 
 
-select * from stg_fecha where ano=2018;
+select * from stg_fecha where ano=2016;
 
