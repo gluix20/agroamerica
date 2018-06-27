@@ -16,7 +16,7 @@ NOCOMPRESS NOLOGGING TABLESPACE "STAGE" BUILD DEFERRED REFRESH COMPLETE ON DEMAN
 AS
 with fecha_carga as (
 select fecha from stg_periodos_carga_vw
-where tipo = 'FRO_OBI_PLANILLA'
+where tipo = 'STG_COSTOS_OG'
 )
 select /*+ PUSH_PRED(c) */
 c.*
