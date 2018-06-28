@@ -7,11 +7,10 @@ order by ccf, fecha_ini
 
 CREATE OR REPLACE FORCE VIEW "AGRICULTURA".bi_locacion_vw
 AS
-select l.comercializadora, l.region_cod, l.distrito_cod, l.locacion_cod, l.locacion,
+select l.comercializadora, l.region_cod, l.distrito_cod, 
+l.locacion_cod, l.locacion,
 decode(l.cccf,l.ccf,l.ccf,l.cccf) ccf, c.cc,
 l.inversion, l.fecha_ini, l.fecha_fin, l.activo
-
 from bi_consolidcc c 
 left outer join bi_locacion l on (c.ccf=l.ccf)
---where trim(l.ccf) in ('9100101')
 ;
