@@ -2,12 +2,12 @@ drop materialized view STG_LOCACION;
 exec ETL_SCRIPTS.refresh_now('DIMS','AGROSTG','STG_LOCACION','MV');
 
 select * from STG_LOCACION
-where cia = '00165'
+where cia = '00155'
 order by 1,2,3,4,5
 ;
 
-select * from agrodw.dim_locacion_tab l
-where trim(cc)  in ('140115006');
+select * from agrodw.dim_locacion_tab l;
+select * from stg_nivel;
 
 select * from locacion@frontera;
 
@@ -33,12 +33,13 @@ select * from locacion@frontera;
  to_char(trim(f.mcdl01)) centro_costo,
  l.inversion,
  l.comercializadora,
- decode(trim(r.oregdes),'NO DEFINIDO',rr.region_cod,l.region_cod) region_cod,
+ nvl(decode(trim(r.oregdes),'NO DEFINIDO',rr.region_cod,l.region_cod),0) region_cod,
+ nvl(decode(trim(r.oregdes),'NO DEFINIDO',rr.region,trim(r.oregdes)),'NO DEFINIDO') region,
  decode(trim(r.oregdes),'NO DEFINIDO',101,l.distrito_cod) distrito_cod,
  l.locacion_cod,
  decode(trim(r.oregdes),'NO DEFINIDO',to_char(trim(f.mcdl01)),trim(l.locacion)) locacion,
  decode(trim(r.oregdes),'NO DEFINIDO','OVERHEAD',trim(d.odisdes)) distrito,
- decode(trim(r.oregdes),'NO DEFINIDO',rr.region,trim(r.oregdes)) region,
+ 
  decode(trim(r.oregdes),'NO DEFINIDO',rr.pais,trim(r.pais)) pais,
  decode(trim(r.oregdes),'NO DEFINIDO',rr.grupo,trim(r.grupo)) grupo,
  l.fecha_ini,
@@ -51,8 +52,8 @@ select * from locacion@frontera;
  left outer join obdistritos@agricultura d ON (l.distrito_cod = d.odiscod and l.region_cod = d.oregcod)
  left outer join obregiones@agricultura r ON (d.oregcod = r.oregcod)
  left outer join bi_ref_region@agricultura rr on (f.mcco=rr.cia)
+ --where r.negocio is not null
  order by ccf
- where r.negocio is not null
  ;
 
 select * from proddta.f0006@agricultura f
