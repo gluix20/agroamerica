@@ -365,23 +365,26 @@ execute immediate header_txt||query_txt;
       "REGION" = stg."REGION",                "CIA" = stg."CIA", 
       "LOCACION_COD" = stg."LOCACION_COD",    "CENTRO_COSTO" = stg."CENTRO_COSTO",
       "INVERSION" = stg."INVERSION",          "NEGOCIO" = stg."NEGOCIO",
-      "NIVEL" = stg."NIVEL",                  fecha_fin = stg.fecha_fin,
-      estado = stg.estado, pais=stg.pais, 
-      grupo=stg.grupo, comercializadora=stg.comercializadora,
-      cia_nombre=stg.cia_nombre, tipo_cc=stg.tipo_cc
+      nivel = stg.nivel, fecha_fin = stg.fecha_fin,
+      estado = stg.estado, pais = stg.pais, 
+      grupo = stg.grupo, comercializadora = stg.comercializadora,
+      cia_nombre = stg.cia_nombre, tipo_cc = stg.tipo_cc, 
+      cc_nombre = stg.cc_nombre
            
     WHEN NOT MATCHED THEN
       INSERT
         (dim."DK", dim."LOCACION", dim."DISTRITO_COD", dim."DISTRITO", dim."REGION_COD",
         dim."REGION", dim."CIA", dim."LOCACION_COD", dim."CENTRO_COSTO", dim."INVERSION",
         dim."NEGOCIO", dim."CC", dim."NIVEL", dim."DIMENSION_KEY", dim.fecha_ini, dim.fecha_fin,
-        dim.estado, dim.pais, dim.grupo, dim.comercializadora, dim.cia_nombre, dim.tipo_cc)
+        dim.estado, dim.pais, dim.grupo, dim.comercializadora, dim.cia_nombre, dim.tipo_cc,
+        dim.cc_nombre)
       VALUES
         (agrodw."DIM_LOCACION_SEQ".NEXTVAL,
         stg."LOCACION", stg."DISTRITO_COD", stg."DISTRITO", stg."REGION_COD", stg."REGION",
         stg."CIA", stg."LOCACION_COD", stg."CENTRO_COSTO", stg."INVERSION", stg."NEGOCIO",
         stg."CC", stg."NIVEL", agrodw."DIM_LOCACION_SEQ".CURRVAL, stg.fecha_ini, stg.fecha_fin,
-        stg.estado, stg.pais, stg.grupo, stg.comercializadora, stg.cia_nombre, stg.tipo_cc)
+        stg.estado, stg.pais, stg.grupo, stg.comercializadora, stg.cia_nombre, stg.tipo_cc,
+        stg.cc_nombre)
     ;
     commit;
   END refresh_dim_locacion_tab;
