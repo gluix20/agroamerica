@@ -7,7 +7,7 @@ exec ETL_SCRIPTS.REFRESH_ALL;
 exec ETL_SCRIPTS.refresh_dims;
      exec ETL_SCRIPTS.refresh_budget('C');
      exec ETL_SCRIPTS.refresh_prod('C');
-     exec ETL_SCRIPTS.refresh_matog('F');
+     exec ETL_SCRIPTS.refresh_matog('C');
      exec ETL_SCRIPTS.refresh_mdo('C');
 
 
@@ -35,9 +35,10 @@ exec ETL_SCRIPTS.refresh_dim_material_tab;
 
 
 select * from agrodw.dim_fecha_tab order by fecha desc;
-select * from stg_locacion where region_cod=1 and distrito_cod=5
+select * from stg_locacion
+where nivel = 'BTC4'
 order by cc;
-select * from agrodw.dim_locacion_tab where region_cod=1 and distrito_cod=5
+select * from agrodw.dim_locacion_tab
 order by cc;
 select * from agrostg.stg_labor;
 select * from agrodw.dim_labor_tab;

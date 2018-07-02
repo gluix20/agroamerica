@@ -31,6 +31,7 @@ select * from locacion@frontera;
  decode(trim(r.oregdes),'NO DEFINIDO', to_char(f.mcmcu), to_char(l.ccf)) ccf,
  to_char(f.mcmcu) cc,
  to_char(trim(f.mcdl01)) centro_costo,
+ to_char(trim(f.mcdc)) cc_nombre,
  l.inversion,
  l.comercializadora,
  nvl(decode(trim(r.oregdes),'NO DEFINIDO',rr.region_cod,l.region_cod),0) region_cod,
