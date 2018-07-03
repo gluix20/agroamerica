@@ -42,10 +42,11 @@ select * from locacion@frontera;
  decode(trim(r.oregdes),'NO DEFINIDO','OVERHEAD',trim(d.odisdes)) distrito,
  
  decode(trim(r.oregdes),'NO DEFINIDO',rr.pais,trim(r.pais)) pais,
- decode(trim(r.oregdes),'NO DEFINIDO',rr.grupo,trim(r.grupo)) grupo,
- l.fecha_ini,
- l.fecha_fin,
- decode(l.activo,1,'ACTIVO','INACTIVO') estado
+ decode(trim(r.oregdes),'NO DEFINIDO',rr.grupo,trim(r.grupo)) grupo
+ , nvl(l.fecha_ini, to_date('01/01/2013','dd/mm/yyyy')) fecha_ini
+ , nvl(l.fecha_fin, to_date('31/12/2050','dd/mm/yyyy')) fecha_fin
+ , decode(l.activo,1,'ACTIVO','INACTIVO') estado
+ 
  from proddta.f0010@agricultura c
  join cias ci on (c.ccco = ci.cia)
  join proddta.f0006@agricultura f on (c.ccco = f.mcco)
