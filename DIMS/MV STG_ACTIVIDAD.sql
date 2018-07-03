@@ -10,7 +10,7 @@ exec ETL_SCRIPTS.refresh_now('DIMS','AGROSTG','STG_ACTIVIDAD','MV');
 --151104----NOTE: Se agrega join con la tabla stage de proceso.
 --160125----NOTE: Se agrega case en el join para desglosar EXPORTACIÓN.
 
-select distinct proceso, proceso_ordby, macro, macro_ordby, proceso_jde, costo_locinv from stg_actividad
+select * from stg_actividad
 order by 2,1,4,3
 ;
 
@@ -26,9 +26,9 @@ CREATE MATERIALIZED VIEW "AGROSTG"."STG_ACTIVIDAD"
   p.proceso_ordby,
   p.macro,
   p.macro_ordby,
-  case when p.proceso in ('DEPRECIACIONES','FIJOS FINCA') then p.proceso
-  else trim(to_char(drdl01)) end actividad_rep_sem,
-  case when p.proceso in ('DEPRECIACIONES','FIJOS FINCA') then to_char(p.proceso_ordby)
+  case when p.rep_sem = 1 then p.proceso
+  else trim(to_char(a.drdl01)) end actividad_rep_sem,
+  case when p.rep_sem = 1 then to_char(p.proceso_ordby)
   else to_char(drky) end actividad_rep_sem_ordby,
   p.costo_locinv
 from prodctl.f0005@agricultura a
