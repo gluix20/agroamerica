@@ -3,8 +3,6 @@ exec ETL_SCRIPTS.refresh_now('MATOG','AGRODW','CUB_MATOG_MV','MV');
 --alter materialized view AGRODW.CUB_MATOG_MV compile;
 --purge recyclebin;
 
---150825----TIME: 
-
 select count(*) from AGRODW.CUB_MATOG_MV
 --order by 1,2
 ;
@@ -28,8 +26,8 @@ FROM
  left outer JOIN   agrodw."DIM_CUENTA_TAB" cu ON ( stg.cuenta = cu.cuenta )
  where stg.tipo_oper in ('COSTO')  /*Solo costo, no inversion.*/
  and stg.tipo_costo in ('MAT','CDM')  /*Que no pase ninguna operación de planilla.*/
- and a.macro not in ('OTROS')  /*Que no pase procesos aún no clasificados.*/
  ;
  
- 
- select * from agrostg.stg_matog_prr_vw;
+ select distinct tipo_oper 
+ from agrostg.stg_matog_prr_vw
+ ;

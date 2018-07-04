@@ -15,7 +15,10 @@ select * from locacion@frontera;
  NOCOMPRESS NOLOGGING TABLESPACE "STAGE" BUILD DEFERRED USING INDEX REFRESH COMPLETE ON DEMAND
  AS
  with cias as (
-    select g.gbco cia, g.nivcod, trim(to_char(g.nivdes)) nivel 
+    select g.gbco cia, g.nivcod
+    , trim(to_char(g.nivdes)) nivel
+    , bcc.negocio
+    , bcc.pais
     from infodb.relemprlevel1@agricultura g
     join bi_carga_cia@agricultura bcc on (g.nivcod = bcc.nivcod and g.nivdes = bcc.nivdes)
     order by 1
@@ -23,9 +26,7 @@ select * from locacion@frontera;
  select 
  trim(c.ccname) cia_nombre,
  trim(f.mcstyl) tipo_cc,
- case 
- when ci.nivel in ('POIC','palcon') then 'PALMA'
- else 'BANANO' end negocio,
+ ci.negocio,
  ci.nivel,
  to_char(f.mcco) cia, 
  decode(trim(r.oregdes),'NO DEFINIDO', to_char(f.mcmcu), to_char(l.ccf)) ccf,
@@ -40,8 +41,7 @@ select * from locacion@frontera;
  l.locacion_cod,
  decode(trim(r.oregdes),'NO DEFINIDO',to_char(trim(f.mcdl01)),trim(l.locacion)) locacion,
  decode(trim(r.oregdes),'NO DEFINIDO','OVERHEAD',trim(d.odisdes)) distrito,
- 
- decode(trim(r.oregdes),'NO DEFINIDO',rr.pais,trim(r.pais)) pais,
+ ci.pais,
  decode(trim(r.oregdes),'NO DEFINIDO',rr.grupo,trim(r.grupo)) grupo
  , nvl(l.fecha_ini, to_date('01/01/2013','dd/mm/yyyy')) fecha_ini
  , nvl(l.fecha_fin, to_date('31/12/2050','dd/mm/yyyy')) fecha_fin
@@ -76,3 +76,9 @@ from infodb.relemprlevel1@agricultura g
 join bi_carga_cia@agricultura bcc on (g.nivcod = bcc.nivcod and g.nivdes = bcc.nivdes)
 order by 1
 ;
+
+select negocio, pais, nivel, cia, grupo, region, distrito, locacion, cc_nombre, centro_costo, tipo_cc, cc
+from stg_locacion
+order by 3,5,6,7,8
+;
+
