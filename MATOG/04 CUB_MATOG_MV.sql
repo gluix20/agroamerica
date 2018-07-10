@@ -3,7 +3,7 @@ exec ETL_SCRIPTS.refresh_now('MATOG','AGRODW','CUB_MATOG_MV','MV');
 --alter materialized view AGRODW.CUB_MATOG_MV compile;
 --purge recyclebin;
 
-select count(*) from AGRODW.CUB_MATOG_MV
+select * from AGRODW.CUB_MATOG_MV
 --order by 1,2
 ;
 
