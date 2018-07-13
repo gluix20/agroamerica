@@ -1,12 +1,9 @@
 select * from palm_despachos_vw
 where cliente = 'OLEOSUR'
-and rango = '46 o más'
-and fecha_efectiva is null
 ;
 
 create or replace view palm_despachos_vw
 as
-
 select c.ano,
   c.semana,
   c.extractora, c.cliente, c.producto, 
@@ -38,20 +35,25 @@ select c.ano,
   FECHA_PAGO ,
   FECHA_EFECTIVA ,
   CONCEPTO_NC ,
-  PAST_DUE,
-  case when past_due <= 0 then 'BEFORE DUE'
-  when past_due > 0 then 'PAST DUE'
+  trunc(sysdate) - fecha_pago past_due,
+  case
+  when fecha_efectiva is not null then 'PAID'
+  when trunc(sysdate) - fecha_pago <= 0 then 'BEFORE DUE'
+  when trunc(sysdate) - fecha_pago > 0 then 'PAST DUE'
   else '' end tipo_due,
   
   o.fecha_orden,
   co.contrato_cod,
   fe.mes mes_despacho,
-  fe.periodo perdiodo_despacho,
-  fe.periodo_cod perdiodo_cod_despacho 
-  from PALM_DESPACHOS c
-  left outer join palm_ordenes o on (c.oc=o.codigo)
-  left outer join palm_contratos co on (o.contrato_cod=co.contrato_cod)
-  left outer join stg_fecha fe on (c.fecha_despacho = fe.fecha);
+  fe.periodo perdiodo_despacho
+  , fe.periodo_cod perdiodo_cod_despacho
+  , c.fecha_pago -  c.fecha_doc dias_credito
+  from palm_despachos c
+  left outer join palm_ordenes o on (c.oc = o.codigo)
+  left outer join palm_contratos co on (o.contrato_cod = co.contrato_cod)
+  left outer join stg_fecha fe on (c.fecha_despacho = fe.fecha)
+  
+  ;
   
   select * from palm_despachos
   where oc='OS1603-04'
@@ -59,3 +61,11 @@ select c.ano,
   select * from palm_contratos;
   select * from palm_ordenes;
   
+  
+  select c.*, co.*
+  from palm_despachos c
+  left outer join palm_ordenes o on (c.oc=o.codigo)
+  left outer join palm_contratos co on (o.contrato_cod=co.contrato_cod)
+  left outer join stg_fecha fe on (c.fecha_despacho = fe.fecha)
+  where c.ano = '2018'
+  ;
