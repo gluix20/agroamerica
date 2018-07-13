@@ -13,14 +13,16 @@ CREATE MATERIALIZED VIEW "AGROSTG"."STG_ACTIVIDAD"
   to_char(a.drky) actividad_cod, 
   trim(to_char(a.drdl01)) actividad,
   to_char(trim(a.drdl02)) proceso_jde,
-  p.proceso,  
+  to_char(trim(a.drdl02)) proceso,  
   p.proceso_ordby,
   p.macro,
   p.macro_ordby,
-  case when p.rep_sem = 1 then p.proceso
+  case when p.rep_sem = 1 then to_char(trim(a.drdl02))
   else trim(to_char(a.drdl01)) end actividad_rep_sem,
-  case when p.rep_sem = 1 then to_char(p.proceso_ordby)
-  else to_char(a.drky) end actividad_rep_sem_ordby,
+  
+  case when p.rep_sem = 1 then to_char(trim(substr(a.drdl02,1,6)))
+  else trim(to_char(a.drky)) end actividad_rep_sem_ordby,
+  
   p.costo_locinv
 from prodctl.f0005@agricultura a
 left outer join agrostg.proceso p on ( substr(to_char(a.drdl02),1,6) =  p.proceso_match )
