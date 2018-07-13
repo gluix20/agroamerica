@@ -31,10 +31,10 @@ case when g.nivdes in ('POIC','palcon') then 'PALMA' else 'BANANO' end negocio,
     then 'CDP' --Contadirecta Planilla
     when ilitm is not null then 'MAT' --Materiales del modulo de inventarios
     else 'CDM' end as varchar2(3)) tipo_costo --Contadirecta Inventario y Otros Gastos
-    , '' tipo_registro
+    , 'OP' tipo_registro
     , trim(to_char(g.nivdes)) nivel
     , case when substr(trim(e.gmobj),1,2) in ('15') then 'INVERSION' 
-    when substr(trim(e.gmobj),1,1) in ('4') then 'INGRESO' 
+    when substr(trim(e.gmobj),1,1) in ('4','8') then 'INGRESO' 
     else 'COSTO' end tipo_oper
     
     , case when gldgj >= 115001 then 0 else 1 end historico
@@ -44,7 +44,7 @@ case when g.nivdes in ('POIC','palcon') then 'PALMA' else 'BANANO' end negocio,
     , sum(glaa/100) valor
   from proddta.f0911 a
   left outer join proddta.f4111 b on (b.ilkco = a.glkco AND b.ildoc = a.gldoc AND b.ildct = a.gldct AND b.iljeln = a.gljeln - 1 AND b.ilitm = a.glitm AND b.ildgl = a.gldgj)  
-  join proddta.f0901 e ON (a.glaid = e.gmaid and ( substr(trim(e.gmobj),1,1) >= 4 or substr(trim(e.gmobj),1,2) in ('15')))
+  join proddta.f0901 e ON (a.glaid = e.gmaid and ( to_number(substr(trim(e.gmobj),1,1)) >= 4 or to_number(substr(trim(e.gmobj),1,2)) = 15 ))
   join proddta.f0010 f ON (e.gmco = f.ccco)--PARA OBTENER EL LIBRO EN DOLARES.
   
   --join bi_carga_fecha cf on (cf.proceso='MATOG' and to_date(substr(gldgj,2,5),'YYDDD') between cf.fecha_ini and cf.fecha_fin)
@@ -80,10 +80,10 @@ case when g.nivdes in ('POIC','palcon') then 'PALMA' else 'BANANO' end negocio,
     then 'CDP' --Contadirecta Planilla
     when ilitm is not null then 'MAT' --Materiales del modulo de inventarios
     else 'CDM' end as varchar2(3)), --Contadirecta Inventario y Otros Gastos
-    '' /*tipo_registro*/,
+    'OP' /*tipo_registro*/,
     trim(to_char(g.nivdes)),
     case when substr(trim(e.gmobj),1,2) in ('15') then 'INVERSION' 
-    when substr(trim(e.gmobj),1,1) in ('4') then 'INGRESO' 
+    when substr(trim(e.gmobj),1,1) in ('4','8') then 'INGRESO' 
     else 'COSTO' end,
     case when gldgj >= 115001 then 0 else 1 end,
     case when glcrr != 0 and glcrr is not null then 1/glcrr else 0 end
