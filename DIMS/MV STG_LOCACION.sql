@@ -2,7 +2,7 @@ drop materialized view STG_LOCACION;
 exec ETL_SCRIPTS.refresh_now('DIMS','AGROSTG','STG_LOCACION','MV');
 
 select * from STG_LOCACION
-where cia = '00155'
+where trim(cc) = '140112003'
 order by 1,2,3,4,5
 ;
 

@@ -1,11 +1,3 @@
---150831----NOTE: Se agrega material_cod, material, material_cyd. Se quita CONSUMO INVENTARIO en descripción.
---150910----NOTE: Se agrega cat17_desc.
---160304----NOTE: Se cambian los código de TIPO_COSTO y Prorrateo. Se cambia tipo_oper PRODUCCION a COSTO.
---160412----NOTE: Se agrega TIPO_REGISTRO. Se revisan todos los tipos de dato para sean VARCHAR2 siempre.
---161201----NOTE: Se quitan campos para reducir tamaño de query y tabla.
-                --Entre ellos los de materiales, ano, periodo, cat17_desc, se cambia el nombre de budget_cod a cat17
-                --Se quita el join con el catalogo de materiales, y con el f0005 de cat17
-                --No se puede dejar amarrado aín con la tabla BI_CARGA_FECHA porque se tarda mucho.
 
 desc obi_costos_og;
 
@@ -23,7 +15,9 @@ case when g.nivdes in ('POIC','palcon') then 'PALMA' else 'BANANO' end negocio,
     trim(to_char(gldoc)) nodocto,
     trim(to_char(glicu)) batch,
     to_date(substr(gldgj,2,5),'YYDDD') fecha,
-    to_char(a.glmcu) cc,    lpad(to_char(decode(e.gmr016,'116','164','585','586',e.gmr016)),10,' ') actividad_cod,    
+    to_char(a.glmcu) cc
+    
+    , lpad(to_char(decode(e.gmr016,'116','164','585','586',e.gmr016)),10,' ') actividad_cod, 
     trim(to_char(glani)) cuenta,
     
     nvl(trim(to_char(ilitm)),'-ND-') material_jde,    
@@ -36,25 +30,21 @@ case when g.nivdes in ('POIC','palcon') then 'PALMA' else 'BANANO' end negocio,
     when substr(trim(e.gmr017),1,2) in ('LC')-- or substr(trim(e.gmr017),1,3) in ('FRP','FSP','SAS','BEE','FGV','FSI','FAP','FMV','FTO') 
     then 'CDP' --Contadirecta Planilla
     when ilitm is not null then 'MAT' --Materiales del modulo de inventarios
-    else 'CDM' end as varchar2(3)) tipo_costo, --Contadirecta Inventario y Otros Gastos
-
-    to_char(case 
-    when to_date(SUBSTR(gldgj,2,5),'YYDDD') between to_date('07092014','ddmmyyyy') and to_date('31122014','ddmmyyyy') 
-        and trim(to_char(b.ilitm)) is null and glaa < 0 and trim(glexr) like '% INVE%'
-        then 'AJUSTE MAYOR' else 'OPERATIVO' end) tipo_registro,
-        trim(to_char(g.nivdes)) nivel,
-    case when substr(trim(e.gmobj),1,2) in ('15') then 'INVERSION' 
+    else 'CDM' end as varchar2(3)) tipo_costo --Contadirecta Inventario y Otros Gastos
+    , '' tipo_registro
+    , trim(to_char(g.nivdes)) nivel
+    , case when substr(trim(e.gmobj),1,2) in ('15') then 'INVERSION' 
     when substr(trim(e.gmobj),1,1) in ('4') then 'INGRESO' 
-    else 'COSTO' end tipo_oper,
+    else 'COSTO' end tipo_oper
     
-    case when gldgj >= 115001 then 0 else 1 end historico,
+    , case when gldgj >= 115001 then 0 else 1 end historico
     
-    case when glcrr != 0 and glcrr is not null then 1/glcrr else 0 end tasa_cambio,
-    sum(nvl(iltrqt,0)/1000000) cantidad,
-    sum(glaa/100) valor
+    , case when glcrr != 0 and glcrr is not null then 1/glcrr else 0 end tasa_cambio
+    , sum(nvl(iltrqt,0)/1000000) cantidad
+    , sum(glaa/100) valor
   from proddta.f0911 a
   left outer join proddta.f4111 b on (b.ilkco = a.glkco AND b.ildoc = a.gldoc AND b.ildct = a.gldct AND b.iljeln = a.gljeln - 1 AND b.ilitm = a.glitm AND b.ildgl = a.gldgj)  
-  join proddta.f0901 e ON (a.glaid = e.gmaid and ( substr(trim(e.gmobj),1,1) in ('4','5','6','7','9') or substr(trim(e.gmobj),1,2) in ('15')))
+  join proddta.f0901 e ON (a.glaid = e.gmaid and ( substr(trim(e.gmobj),1,1) >= 4 or substr(trim(e.gmobj),1,2) in ('15')))
   join proddta.f0010 f ON (e.gmco = f.ccco)--PARA OBTENER EL LIBRO EN DOLARES.
   
   --join bi_carga_fecha cf on (cf.proceso='MATOG' and to_date(substr(gldgj,2,5),'YYDDD') between cf.fecha_ini and cf.fecha_fin)
@@ -90,12 +80,8 @@ case when g.nivdes in ('POIC','palcon') then 'PALMA' else 'BANANO' end negocio,
     then 'CDP' --Contadirecta Planilla
     when ilitm is not null then 'MAT' --Materiales del modulo de inventarios
     else 'CDM' end as varchar2(3)), --Contadirecta Inventario y Otros Gastos
-
-    to_char(case 
-    when to_date(SUBSTR(gldgj,2,5),'YYDDD') between to_date('07092014','ddmmyyyy') and to_date('31122014','ddmmyyyy') 
-        and trim(to_char(b.ilitm)) is null and glaa < 0 and trim(glexr) like '% INVE%'
-        then 'AJUSTE MAYOR' else 'OPERATIVO' end),
-        trim(to_char(g.nivdes)),
+    '' /*tipo_registro*/,
+    trim(to_char(g.nivdes)),
     case when substr(trim(e.gmobj),1,2) in ('15') then 'INVERSION' 
     when substr(trim(e.gmobj),1,1) in ('4') then 'INGRESO' 
     else 'COSTO' end,
