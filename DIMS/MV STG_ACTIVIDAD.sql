@@ -17,6 +17,7 @@ CREATE MATERIALIZED VIEW "AGROSTG"."STG_ACTIVIDAD"
   p.proceso_ordby,
   p.macro,
   p.macro_ordby,
+  p.rep_sem,
   case when p.rep_sem = 1 then to_char(trim(a.drdl02))
   else trim(to_char(a.drdl01)) end actividad_rep_sem,
   
@@ -28,7 +29,7 @@ from prodctl.f0005@agricultura a
 left outer join agrostg.proceso p on ( substr(to_char(a.drdl02),1,6) =  p.proceso_match )
 where a.drsy = '09' and a.drrt = '16'
 union all
-select '-ND-', 'NO DEFINIDO', 'NO DEFINIDO', 'NO DEFINIDO', 99, 'NO DEFINIDO',99,'NO DEFINIDO','-ND-',1 from dual
+select '-ND-', 'NO DEFINIDO', 'NO DEFINIDO', 'NO DEFINIDO', 99, 'NO DEFINIDO',99,0,'NO DEFINIDO','-ND-',1 from dual
 ;
 
 
