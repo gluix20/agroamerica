@@ -1,5 +1,7 @@
 drop MATERIALIZED VIEW "AGROSTG"."STG_ACTIVIDAD";
 exec ETL_SCRIPTS.refresh_now('DIMS','AGROSTG','STG_ACTIVIDAD','MV');
+exec ETL_SCRIPTS.refresh_dim_actividad_tab;
+select * from agrodw.dim_actividad_tab;
 
 select * from stg_actividad
 order by 1,2,3

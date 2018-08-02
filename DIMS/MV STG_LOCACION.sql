@@ -14,6 +14,7 @@ select * from locacion@frontera;
  CREATE MATERIALIZED VIEW "AGROSTG"."STG_LOCACION"
  NOCOMPRESS NOLOGGING TABLESPACE "STAGE" BUILD DEFERRED USING INDEX REFRESH COMPLETE ON DEMAND
  AS
+ 
  with cias as (
     select g.gbco cia, g.nivcod
     , trim(to_char(g.nivdes)) nivel
@@ -24,25 +25,28 @@ select * from locacion@frontera;
     order by 1
  )
  select 
- trim(c.ccname) cia_nombre,
- trim(f.mcstyl) tipo_cc,
- ci.negocio,
- ci.nivel,
- to_char(f.mcco) cia, 
- decode(trim(r.oregdes),'NO DEFINIDO', to_char(f.mcmcu), to_char(l.ccf)) ccf,
- to_char(f.mcmcu) cc,
- to_char(trim(f.mcdl01)) centro_costo,
- to_char(trim(f.mcdc)) cc_nombre,
- l.inversion,
- l.comercializadora,
- nvl(decode(trim(r.oregdes),'NO DEFINIDO',rr.region_cod,l.region_cod),0) region_cod,
- nvl(decode(trim(r.oregdes),'NO DEFINIDO',rr.region,trim(r.oregdes)),'NO DEFINIDO') region,
- decode(trim(r.oregdes),'NO DEFINIDO',101,l.distrito_cod) distrito_cod,
- l.locacion_cod,
- decode(trim(r.oregdes),'NO DEFINIDO',to_char(trim(f.mcdl01)),trim(l.locacion)) locacion,
- decode(trim(r.oregdes),'NO DEFINIDO','OVERHEAD',trim(d.odisdes)) distrito,
- ci.pais,
- decode(trim(r.oregdes),'NO DEFINIDO',rr.grupo,trim(r.grupo)) grupo
+ trim(c.ccname) cia_nombre
+ , trim(f.mcstyl) tipo_cc
+ , ci.negocio
+ , ci.nivel
+ , to_char(f.mcco) cia
+ , decode(trim(r.oregdes)
+ , 'NO DEFINIDO'
+ , to_char(f.mcmcu)
+ , to_char(l.ccf)) ccf
+ , to_char(f.mcmcu) cc
+ , to_char(trim(f.mcdl01)) centro_costo
+ , to_char(trim(f.mcdc)) cc_nombre
+ , nvl(l.locacion_cod, 0) locacion_cod
+ , nvl(trim(l.locacion),to_char(trim(f.mcdl01))) locacion
+ , l.inversion
+ , l.comercializadora
+ , nvl(decode(trim(r.oregdes),'NO DEFINIDO',rr.region_cod,l.region_cod),0) region_cod
+ , nvl(decode(trim(r.oregdes),'NO DEFINIDO',rr.region,trim(r.oregdes)),'NO DEFINIDO') region
+ , decode(trim(r.oregdes),'NO DEFINIDO',101,l.distrito_cod) distrito_cod
+ , decode(trim(r.oregdes), 'NO DEFINIDO', 'OVERHEAD', trim(d.odisdes)) distrito
+ , ci.pais
+ , decode(trim(r.oregdes),'NO DEFINIDO',rr.grupo,trim(r.grupo)) grupo
  , nvl(l.fecha_ini, to_date('01/01/2013','dd/mm/yyyy')) fecha_ini
  , nvl(l.fecha_fin, to_date('31/12/2050','dd/mm/yyyy')) fecha_fin
  , decode(l.activo,1,'ACTIVO','INACTIVO') estado

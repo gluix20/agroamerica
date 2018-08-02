@@ -1,0 +1,15 @@
+drop MATERIALIZED VIEW "AGROSTG"."STG_LABOR_EVO";
+exec ETL_SCRIPTS.refresh_now('DIMS','AGROSTG','STG_LABOR_EVO','MV');
+exec ETL_SCRIPTS.refresh_dim_labor_tab;
+select * from agrodw.dim_labor_tab;
+
+select * from STG_LABOR_EVO
+order by 1,2,3
+;
+
+CREATE MATERIALIZED VIEW "AGROSTG"."STG_LABOR_EVO"
+NOCOMPRESS NOLOGGING TABLESPACE "STAGE" 
+BUILD IMMEDIATE USING INDEX REFRESH COMPLETE ON DEMAND USING TRUSTED CONSTRAINTS
+AS 
+    select * from gt.lab_labores@evolution l
+;
