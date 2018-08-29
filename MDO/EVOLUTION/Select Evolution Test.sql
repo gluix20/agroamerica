@@ -1,3 +1,5 @@
+select * from exp.emp_empleados@evolution;
+
 select "inn_codemp", "inn_fecha_grabacion", "inn_tiempo", sum("inn_valor") from sal.inn_ingresos@evolution
 where "inn_usuario_grabacion" = 'jarchila' and "inn_codemp"=4102
 group by "inn_codemp", "inn_fecha_grabacion", "inn_tiempo"
