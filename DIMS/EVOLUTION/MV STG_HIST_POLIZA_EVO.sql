@@ -1,0 +1,15 @@
+drop MATERIALIZED VIEW "AGROSTG"."STG_HIST_POLIZA_EVO";
+exec ETL_SCRIPTS.refresh_now('EVO','AGROSTG','STG_HIST_POLIZA_EVO','MV');
+--exec ETL_SCRIPTS.refresh_dim_labor_tab;
+--select * from agrodw.dim_labor_tab;
+
+select * from STG_HIST_POLIZA_EVO
+order by 1,2,3
+;
+
+CREATE MATERIALIZED VIEW "AGROSTG"."STG_HIST_POLIZA_EVO"
+NOCOMPRESS NOLOGGING TABLESPACE "STAGE" 
+BUILD IMMEDIATE USING INDEX REFRESH COMPLETE ON DEMAND USING TRUSTED CONSTRAINTS
+AS 
+    select * from gt.htp_Historial_Traslada_Poliza_Contable_JDE@evolution l
+;

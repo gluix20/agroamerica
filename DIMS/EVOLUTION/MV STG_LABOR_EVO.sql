@@ -1,7 +1,7 @@
 drop MATERIALIZED VIEW "AGROSTG"."STG_LABOR_EVO";
-exec ETL_SCRIPTS.refresh_now('DIMS','AGROSTG','STG_LABOR_EVO','MV');
-exec ETL_SCRIPTS.refresh_dim_labor_tab;
-select * from agrodw.dim_labor_tab;
+exec ETL_SCRIPTS.refresh_now('EVO','AGROSTG','STG_LABOR_EVO','MV');
+--exec ETL_SCRIPTS.refresh_dim_labor_tab;
+--select * from agrodw.dim_labor_tab;
 
 select * from STG_LABOR_EVO
 order by 1,2,3
