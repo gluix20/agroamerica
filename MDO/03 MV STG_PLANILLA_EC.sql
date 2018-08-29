@@ -50,11 +50,6 @@ from stg_planilla_ec
 where codigo_empresa=1 and codigo_locacion in (8,9)
 ;
 
-
-select * from ecuador.planilla_agroamerica@panama;
-
-select * from stg_planilla_gt;
-
-
-
-
+ select *
+    from agro.planilla_agroamerica_ec@ecuador c
+    ;

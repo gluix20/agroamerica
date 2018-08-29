@@ -1,8 +1,20 @@
 drop MATERIALIZED VIEW AGROSTG.STG_PLANILLA_GT;
 exec ETL_SCRIPTS.refresh_now('MDO','AGROSTG','STG_PLANILLA_GT','MV');
 
-select *
-from STG_PLANILLA_GT
+select l.locacion, c.locno, f.semana, b.labor_cyd
+from STG_PLANILLA_GT c
+left outer join stg_fecha f on (c.fecha=f.fecha)
+left outer join stg_locacion l on (c.cc=l.cc and c.fecha between l.fecha_ini and l.fecha_fin)
+left outer join stg_labor b on ( c.instancia = b.instancia
+    and c.nomec = b.nomec
+    and c.aplic = b.aplic
+    and c.clave = b.clave
+    and '-ND-' = b.labor_join)
+where b.id_actividad = 31
+--and l.cc = '   140112002'
+and f.ano = 2018
+group by l.locacion, c.locno, f.semana, b.labor_cyd
+order by 1,2,3,4
 ;
 
 CREATE MATERIALIZED VIEW STG_PLANILLA_GT
@@ -80,4 +92,8 @@ left outer join stg_labor la on (c.instancia=la.instancia and c.nomec=la.nomec a
 
 select * from stg_labor
 where instancia=1 and nomec=1 and clave=244
+;
+
+select distinct ausentismo
+from STG_PLANILLA_GT c
 ;

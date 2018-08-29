@@ -40,7 +40,7 @@ with combimdo as (
         select l.region, l.ccf,f.periodo_cod
         from stg_locacion l 
         left outer join stg_fecha f on (f.fecha between l.fecha_ini and l.fecha_fin)
-        where l.distrito not in ('OVERHEAD','COSTOS FIJOS')
+        where l.distrito not in ('OVERHEAD','COSTOS FIJOS','NO DEFINIDO')
         group by l.region, l.ccf,f.periodo_cod
         order by 1,2,3
         
