@@ -6,7 +6,8 @@ create or replace view palm_despachos_vw
 as
 select c.ano,
   c.semana,
-  c.extractora, c.cliente, c.producto, 
+  trim(c.extractora) extractora, 
+  trim(c.cliente) cliente, trim(c.producto) producto, 
   c.fecha_despacho,
   c.placas_t1,
   TM_T1 ,
