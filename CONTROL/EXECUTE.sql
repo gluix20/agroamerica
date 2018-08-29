@@ -8,7 +8,7 @@ exec ETL_SCRIPTS.refresh_dims;
      exec ETL_SCRIPTS.refresh_budget('C');
      exec ETL_SCRIPTS.refresh_prod('C');
      exec ETL_SCRIPTS.refresh_matog('C');
-     exec ETL_SCRIPTS.refresh_mdo('C');
+     exec ETL_SCRIPTS.refresh_mdo('F');
 
 
 
