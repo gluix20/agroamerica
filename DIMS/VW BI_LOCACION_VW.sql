@@ -1,5 +1,3 @@
---161021--NOTE: Se crea.
-
 select * from bi_locacion_vw
 where (region_cod=8) and distrito_cod=1) or substr(locacion,1,2) in ('80','85','86','87')
 order by ccf, fecha_ini
