@@ -1,5 +1,6 @@
 drop materialized view AGROSTG.STG_LABOR;
 exec ETL_SCRIPTS.refresh_now('DIMS','AGROSTG','STG_LABOR','MV');
+exec ETL_SCRIPTS.refresh_dim_labor_tab;
 --alter materialized view AGROSTG.STG_LABOR compile;
 purge recyclebin;
 
