@@ -60,13 +60,17 @@ where c.distrito in ('COSTOS FIJOS','PLANTA DE BENEFICIO') and c.macro not in ('
     UNION ALL
 
 select 
-c.*, f.cc cc_pr, 1 prorrateo,
-c.valor*f.factor_nivel valor_pr, c.cantidad*f.factor_nivel cantidad_pr
+c.*, f.cc cc_pr, 1 prorrateo
+, c.valor * f.factor_nivel       valor_pr
+, c.cantidad * f.factor_nivel   cantidad_pr
 from mog c
 join stg_prorrateo_fac_vw f on (c.nivel=f.nivel and c.ano_pr=f.ano and c.semana_cod=f.semana_cod)
 where c.macro in ('OVERHEAD')
 ) c
 ;
 
-
+select * from stg_prorrateo_fac_vw
+where nivel = 'ATLA'
+and ano=2018
+;
 
