@@ -53,8 +53,6 @@ select * from locacion@frontera;
  left outer join bi_locacion_vw@agricultura l on (f.mcmcu=l.cc)
  left outer join obdistritos@agricultura d ON (l.distrito_cod = d.odiscod and l.region_cod = d.oregcod)
  left outer join obregiones@agricultura r ON (d.oregcod = r.oregcod)
- left outer join bi_ref_region@agricultura rr on (f.mcco=rr.cia)
- --where r.negocio is not null
  order by ccf
  ;
 
@@ -93,28 +91,7 @@ with cias as (
     order by 1
  )
  select 
- trim(c.ccname) cia_nombre
- , trim(f.mcstyl) tipo_cc
- , ci.negocio
- , ci.nivel
- , to_char(f.mcco) cia
- , nvl(to_char(l.ccf), to_char(f.mcmcu)) ccf
- , to_char(f.mcmcu) cc
- , to_char(trim(f.mcdl01)) centro_costo
- , to_char(trim(f.mcdc)) cc_nombre
- , nvl(l.locacion_cod, 0) locacion_cod
- , nvl(trim(l.locacion),to_char(trim(f.mcdl01))) locacion
- , nvl(l.inversion,0) inversion
- , nvl(l.comercializadora,'NO DEFINIDO') comercializadora
- , nvl(l.region_cod,0) region_cod
- , nvl(trim(r.oregdes),'OVERHEAD') region
- , nvl(l.distrito_cod,0) distrito_cod
- , nvl(trim(d.odisdes),'OVERHEAD') distrito
- , ci.pais
- , nvl(trim(r.grupo),'OVERHEAD') grupo
- , nvl(l.fecha_ini, to_date('01/01/2013','dd/mm/yyyy')) fecha_ini
- , nvl(l.fecha_fin, to_date('31/12/2050','dd/mm/yyyy')) fecha_fin
- , decode(l.activo,1,'ACTIVO','INACTIVO') estado
+ l.*
  from proddta.f0010@agricultura c
  join cias ci on (c.ccco = ci.cia)
  join proddta.f0006@agricultura f on (c.ccco = f.mcco)
@@ -123,7 +100,7 @@ with cias as (
  left outer join obregiones@agricultura r ON (d.oregcod = r.oregcod)
  left outer join bi_ref_region@agricultura rr on (f.mcco=rr.cia)
  --where r.negocio is not null
- where trim(l.cc) = '16555'
+ where trim(l.cc) = '140123001'
  order by ccf
  ;
 
