@@ -131,19 +131,10 @@ Buscar dim_reset             para resetear las secuencias.
     END IF;
     
     IF NOT errores THEN
-    
-      execute immediate 'select count(*) from bi_carga_fecha@agricultura
-      where proceso=''MDOGT'' and tipo_carga= ''H''' into historico;
-      
       refresh_now('MDO','AGRODW','CUB_PLANILLA_GT_MV','MV');
       refresh_now('MDO','AGRODW','CUB_MDO_MV','MV');
       refresh_now('MDO','AGRODW','CUB_COSTOS_RSM_MV','MV');
       refresh_now('MDO','AGRODW','CUB_DESCUENTOS_GT_MV','MV');
-      
-      IF historico > 0 then 
-        refresh_now('MDO','AGRODW','CUB_PLANILLA_GT_H_MV','MV');
-        refresh_now('MDO','AGRODW','CUB_MDO_H_MV','MV');
-      END IF;
       
     END IF;
   END refresh_mdo;
