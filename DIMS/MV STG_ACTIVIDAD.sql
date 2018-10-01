@@ -4,7 +4,7 @@ exec ETL_SCRIPTS.refresh_dim_actividad_tab;
 select * from agrodw.dim_actividad_tab;
 
 select * from stg_actividad
-order by 1,2,3
+order by 3,1
 ;
 
 CREATE MATERIALIZED VIEW "AGROSTG"."STG_ACTIVIDAD"
