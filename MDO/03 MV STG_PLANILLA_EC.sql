@@ -53,3 +53,5 @@ where codigo_empresa=1 and codigo_locacion in (8,9)
  select *
     from agro.planilla_agroamerica_ec@ecuador c
     ;
+    
+    select * from ctrl_failure order by fecha_ts desc;
