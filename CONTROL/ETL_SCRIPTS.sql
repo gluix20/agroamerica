@@ -15,6 +15,7 @@ dim_reset VARCHAR2(1);
   PROCEDURE refresh_semanal;
   PROCEDURE refresh_dims;
   PROCEDURE reset_seqs;
+  PROCEDURE refresh_evolution(tipo VARCHAR2);
   PROCEDURE refresh_prod(tipo VARCHAR2);
   PROCEDURE refresh_matog(tipo VARCHAR2);
   PROCEDURE refresh_mdo(tipo VARCHAR2);
@@ -115,6 +116,9 @@ Buscar dim_reset             para resetear las secuencias.
     
     dbms_output.put_line(to_char(SYSDATE,'DD/MM/YYYY HH:MI:SS')||' Inicia REFRESH_MDO');
     IF tipo='C' THEN
+    --refresh_now('EVO','AGROSTG','STG_LABOR_EVO','MV');
+    --refresh_now('EVO','AGROSTG','STG_DETALLE_JORNALES_EVO','MV');
+    
       refresh_now('MDO','AGROSTG','STG_TASA_CAMBIO','MV');
       --refresh_now('MDO','AGROSTG','STG_CONF_CUENTAS_PLANILLA','MV');
       
@@ -143,6 +147,23 @@ Buscar dim_reset             para resetear las secuencias.
       
     END IF;
   END refresh_mdo;
+  
+  PROCEDURE refresh_evolution(tipo VARCHAR2) AS
+  --Tipo puede ser C: Complete o F: Fast
+  BEGIN  
+    errores := FALSE;
+    historico := 0;
+    
+    dbms_output.put_line(to_char(SYSDATE,'DD/MM/YYYY HH:MI:SS')||' Inicia REFRESH_MDO');
+    IF tipo='C' THEN
+      refresh_now('EVO','AGROSTG','STG_LABOR_EVO','MV');
+      refresh_now('EVO','AGROSTG','STG_DETALLE_JORNALES_EVO','MV');
+    END IF;
+    
+    IF NOT errores THEN
+      null;
+    END IF;
+  END refresh_evolution;
   
   PROCEDURE refresh_budget(tipo VARCHAR2) AS
   BEGIN  
@@ -335,16 +356,17 @@ execute immediate header_txt||query_txt;
       "MACRO_ORDBY" = stg."MACRO_ORDBY",
       actividad_rep_sem = stg.actividad_rep_sem,
       actividad_rep_sem_ordby = stg.actividad_rep_sem_ordby,
-      proceso_jde = stg.proceso_jde
+      proceso_jde = stg.proceso_jde,
+      rep_sem = stg.rep_sem
          
     WHEN NOT MATCHED THEN
       INSERT
         (dim."DK", dim."ACTIVIDAD_COD", dim."ACTIVIDAD", dim."PROCESO", dim."PROCESO_ORDBY",dim."MACRO",dim."MACRO_ORDBY",
-        dim."DIMENSION_KEY", dim.actividad_rep_sem, dim.actividad_rep_sem_ordby, dim.proceso_jde)
+        dim."DIMENSION_KEY", dim.actividad_rep_sem, dim.actividad_rep_sem_ordby, dim.proceso_jde, dim.rep_sem)
       VALUES
         (agrodw."DIM_ACTIVIDAD_SEQ".NEXTVAL, stg."ACTIVIDAD_COD", stg."ACTIVIDAD", 
         stg."PROCESO", stg."PROCESO_ORDBY", stg."MACRO", stg."MACRO_ORDBY", agrodw."DIM_ACTIVIDAD_SEQ".CURRVAL,
-        stg.actividad_rep_sem, stg.actividad_rep_sem_ordby, stg.proceso_jde)
+        stg.actividad_rep_sem, stg.actividad_rep_sem_ordby, stg.proceso_jde, stg.rep_sem)
     ;
     commit;
   END refresh_dim_actividad_tab;
@@ -353,14 +375,13 @@ execute immediate header_txt||query_txt;
   BEGIN
   MERGE /*+ APPEND PARALLEL (dim) */
   INTO agrodw.dim_locacion_tab dim
-  USING (     SELECT * FROM stg_locacion     ) stg
-  
+  USING ( select * from stg_locacion ) stg
   ON ( dim.cc = stg.cc and dim.fecha_ini = stg.fecha_ini )
     
     WHEN MATCHED THEN
       UPDATE
       SET
-      "LOCACION" = stg."LOCACION",            "DISTRITO_COD" = stg."DISTRITO_COD",
+      locacion = stg.locacion, distrito_cod = stg.distrito_cod,
       "DISTRITO" = stg."DISTRITO",            "REGION_COD" = stg."REGION_COD",
       "REGION" = stg."REGION",                "CIA" = stg."CIA", 
       "LOCACION_COD" = stg."LOCACION_COD",    "CENTRO_COSTO" = stg."CENTRO_COSTO",
