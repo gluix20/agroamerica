@@ -7,7 +7,7 @@ purge recyclebin;
 --170313----NOTE: Se agrega para poder hacer join con labores de conta directa.
 
 select * from agrostg.stg_labor
-where instancia = 4 and clave=274
+where id_actividad= 0
 ;
 select * from agrodw.dim_labor_tab;
 

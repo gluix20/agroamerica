@@ -2,6 +2,7 @@ drop materialized view STG_NIVEL;
 exec ETL_SCRIPTS.refresh_now('DIMS','AGROSTG','STG_NIVEL','MV');
 
 select * from STG_NIVEL
+order by 2,3,4
 ;
 
 
@@ -22,3 +23,8 @@ select * from locacion@frontera;
 ;
 
 select * from bi_carga_cia@agricultura;
+
+select * from infodb.relemprlevel1@agricultura g
+where gbco = '00910'
+order by 3,1
+;
