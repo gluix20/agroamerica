@@ -23,5 +23,7 @@ union all
 select 'CUB_PLANILLA_GT_MV' tipo, to_date('01/01/2018','dd/mm/yyyy') fecha, 118001 fecha_jde from dual
 union all
 select 'STG_COSTOS_OG' tipo, to_date('01/01/2017','dd/mm/yyyy') fecha, 117001 fecha_jde from dual
+union all
+select 'STG_INVENTARIO_MV' tipo, to_date('01/01/2017','dd/mm/yyyy') fecha, 117001 fecha_jde from dual
 ;
 
