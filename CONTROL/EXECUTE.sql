@@ -105,7 +105,7 @@ alter materialized view AGRODW.CUB_MDO_MV compile;
 
 select c.*
 from ctrl_SUCCESS c
-where objeto like '%STG_FEC%'
+where objeto like '%STG_%'
 order by 5 desc;
 
 select * from ctrl_failure order by fecha_ts desc;

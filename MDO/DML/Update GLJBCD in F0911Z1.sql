@@ -1,3 +1,43 @@
+/*----UPDATE PLANILLA 12/11/2018----*/
+select distinct gljbcd from proddta.f0911 a 
+where a.glicu in ('775944')
+;
+
+select distinct vnjbcd 
+from proddta.f0911z1 a 
+where a.vnicu in ('775944')
+;
+
+update proddta.f0911 a
+set gljbcd = '1     '
+where a.glicu in ('775944')
+;
+update proddta.f0911z1 a
+set vnjbcd = '1     '
+where a.vnicu in ('775944')
+;
+commit;
+
+/*----UPDATE PLANILLA 17/10/2018----*/
+select distinct gljbcd from proddta.f0911 a 
+where a.glicu in ('759524', '761652', '763603', '766869')
+;
+
+select distinct vnjbcd 
+from proddta.f0911z1 a 
+where a.vnicu in ('759524', '761652', '763603', '766869')
+;
+
+update proddta.f0911 a
+set gljbcd = '1     '
+where a.glicu in ('759524', '761652', '763603', '766869')
+;
+update proddta.f0911z1 a
+set vnjbcd = '1     '
+where a.vnicu in ('759524', '761652', '763603', '766869')
+;
+commit;
+
 /*----REVISON BATCHES PLANILLA ADMINISTRATIVA 23/07/2018----*/ 
 --Cuenta de 22 batches en la Z1 --Count Z1 1659 --Count Diario 3,318 por ambas monedas.
 --Ya se hizo update, ahorita no hay ningún registro con "cero".

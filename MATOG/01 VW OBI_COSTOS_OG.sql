@@ -22,6 +22,7 @@ nvl(ci.negocio,'BANANO') negocio
 , trim(to_char(gldoc)) nodocto
 , trim(to_char(glicu)) batch
 , to_date(substr(gldgj,2,5),'YYDDD') fecha
+, to_date(substr(glupmj,2,5),'YYDDD') fecha_modificacion
 , to_char(a.glmcu) cc
 , lpad(to_char(decode(e.gmr016,'116','164','585','586',e.gmr016)),10,' ') actividad_cod
 , trim(to_char(glani)) cuenta
@@ -64,8 +65,9 @@ nvl(ci.negocio,'BANANO')
     trim(to_char(gldct)),
     trim(to_char(gldoc)),
     trim(to_char(glicu)),
-    to_date(substr(gldgj,2,5),'YYDDD'),
-    to_char(a.glmcu),
+    to_date(substr(gldgj,2,5),'YYDDD')
+    , to_date(substr(glupmj,2,5),'YYDDD')
+    , to_char(a.glmcu),
     lpad(to_char(decode(e.gmr016,'116','164','585','586',e.gmr016)),10,' '),
     trim(to_char(glani)),
     
@@ -90,5 +92,7 @@ nvl(ci.negocio,'BANANO')
     else 'COSTO' end
 , case when glcrr != 0 and glcrr is not null then 1/glcrr else 0 end
 ;
+
+select * from proddta.f0911;
 
 select * from proddta.f0010;

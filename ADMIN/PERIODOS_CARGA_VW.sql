@@ -1,5 +1,11 @@
 select * from stg_periodos_carga_vw;
 
+select * from fro_obi_planilla
+order by fecha_finca asc;
+
+select * from fro_obi_planilla_h
+order by fecha_finca desc;
+
 create or replace view stg_periodos_carga_vw as 
 with periodos as (
 select periodo_cod, min(fecha) fecha, min(fecha_jde) fecha_jde 

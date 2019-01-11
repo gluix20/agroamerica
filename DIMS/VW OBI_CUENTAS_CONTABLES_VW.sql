@@ -19,9 +19,6 @@ to_char(a.gmr018) cat18, to_char(c18.drdl01) cat18_desc,
 to_char(a.gmr019) cat19, to_char(a.gmr020) cat20
 from proddta.f0901 a
 
-join infodb.relemprlevel1 g on (a.gmco=g.gbco)
-join bi_carga_cia bcc on (g.nivcod=bcc.nivcod and g.nivdes=bcc.nivdes)/*CONFIGURAR BI_CARGA_CIA*/
-
 left outer join prodctl.f0005 c16 on (trim(a.gmr016)=trim(c16.drky) and c16.drsy='09' and c16.drrt='16')
 left outer join prodctl.f0005 c17 on (trim(a.gmr017)=trim(c17.drky) and c17.drsy='09' and c17.drrt='17')
 left outer join prodctl.f0005 c18 on (trim(a.gmr017)=trim(c18.drky) and c18.drsy='09' and c18.drrt='18')

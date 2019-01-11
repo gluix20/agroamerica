@@ -1,3 +1,10 @@
+select * from tmp.dtj_detalle_jornales_Asueto@evolution;
+select * from tmp.dtj_detalle_jornales_Extraordinario@evolution;
+select * from tmp.dtj_detalle_jornales_Ordinario@evolution;
+select * from tmp.dtj_detalle_jornales_Septimo@evolution;
+select * from tmp.dtj_detalle_jornales_Estructura_Salarial@evolution;
+select * from tmp.dtj_detalle_jornales_Bonificacion_Rendimiento@evolution;
+
 select * from exp.emp_empleados@evolution;
 
 select "inn_codemp", "inn_fecha_grabacion", "inn_tiempo", sum("inn_valor") from sal.inn_ingresos@evolution

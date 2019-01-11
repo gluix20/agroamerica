@@ -47,10 +47,14 @@ case
   else 0 
 end valor_prest_gtq,
 case 
-  when t.aplic in (1,3) then t.hrs/8 else 0 end jornales,--Solo para piezas y horas ordinarias
-  t.valor valor_gtq, t.bonoh bonoh_gtq, t.bonom bonom_gtq, t.ajuste ajuste_gtq, 
-  t.cantidad, t.hrs,
-  1 registros, 
-case when t.aplic in (1,2,3,4) then 1 else 0 end frecuencia
+  when t.aplic in (1,3) then t.hrs/8 else 0 end jornales--Solo para piezas y horas ordinarias
+, t.valor valor_gtq
+, t.bonoh bonoh_gtq
+, t.bonom bonom_gtq
+, t.ajuste ajuste_gtq
+, t.cantidad
+, t.hrs
+, 1 registros
+, case when t.aplic in (1,2,3,4) then 1 else 0 end frecuencia
 from trab t
 ;

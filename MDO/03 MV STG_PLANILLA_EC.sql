@@ -29,6 +29,11 @@ planilla as (
     c.*, 'PE' pais, 'PEN' moneda_origen
     from agro.planilla_agroamerica_pe@ecuador c
     where fecha_finca >= (select fecha from fecha_carga)
+    union all
+    select /*+ PUSH_PRED(c) */
+    c.*, 'PA' pais, 'PEN' moneda_origen
+    from agro.planilla_agroamerica_pe@ecuador c
+    where fecha_finca >= (select fecha from fecha_carga)
 )
 --Segun chat con LEO, la semana de fincas EC empienza en DOMINGO igual que JDE.
 --Por lo que hay que unirlo con FECHA y no con FECHA_FINCA en STG_FECHA

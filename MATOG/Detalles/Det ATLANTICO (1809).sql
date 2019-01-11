@@ -5,8 +5,8 @@ left outer join stg_locacion l on (c.cc=l.cc and c.fecha between l.fecha_ini and
 left outer join stg_actividad a on (c.actividad_cod=a.actividad_cod)
 where l.nivel = 'ATLA'
 and f.ano = 2018
-and f.semana = 33
-and trim(a.actividad_cod) = '225' 
+and f.semana = 37
+and trim(a.actividad) = 'no borrar' 
 and c.tipo_costo= 'PLA'
 order by 1
 ;
@@ -48,7 +48,7 @@ left outer join stg_labor b on ( c.instancia = b.instancia
     and '-ND-' = b.labor_join)
 where l.nivel = 'ATLA'
 and f.ano = 2018
-and f.periodo = 'PERIODO 09'
+and f.semana = 37
 and c.tipo_costo = 'PLA'
 group by a.actividad_cod
 , a.actividad
@@ -64,7 +64,8 @@ left outer join stg_locacion l on (c.cc=l.cc and c.fecha between l.fecha_ini and
 left outer join stg_actividad a on (c.actividad_cod=a.actividad_cod)
 where l.nivel = 'ATLA'
 and f.ano = 2018
-and f.periodo = 'PERIODO 09'
+and f.semana = 37
+and c.tipo_oper = 'COSTO'
 and c.tipo_costo= 'PLA'
 group by a.actividad_cod
 , a.actividad

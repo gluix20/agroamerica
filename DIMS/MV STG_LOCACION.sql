@@ -4,6 +4,7 @@ exec ETL_SCRIPTS.refresh_dim_locacion_tab;
 select * from agrodw.dim_locacion_tab l;
 
 select * from STG_LOCACION
+where cia = '00256'
 order by 1,2,3,4,5
 ;
 
@@ -48,7 +49,7 @@ select * from locacion@frontera;
  , nvl(l.fecha_fin, to_date('31/12/2050','dd/mm/yyyy')) fecha_fin
  , decode(l.activo,1,'ACTIVO','INACTIVO') estado
  from proddta.f0010@agricultura c
- join cias ci on (c.ccco = ci.cia)
+ left outer join cias ci on (c.ccco = ci.cia)
  join proddta.f0006@agricultura f on (c.ccco = f.mcco)
  left outer join bi_locacion_vw@agricultura l on (f.mcmcu=l.cc)
  left outer join obdistritos@agricultura d ON (l.distrito_cod = d.odiscod and l.region_cod = d.oregcod)
@@ -102,5 +103,10 @@ with cias as (
  --where r.negocio is not null
  where trim(l.cc) = '140123001'
  order by ccf
+ ;
+ 
+ select * from
+ infodb.relemprlevel1@agricultura g
+ --where nivcod=20
  ;
 
